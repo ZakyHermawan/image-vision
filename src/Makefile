@@ -1,2 +1,3 @@
 main:
-	g++ image.cpp -o main -I../include/
+	g++ image.cpp -o image -I../include/
+
