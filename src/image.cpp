@@ -9,6 +9,7 @@ using std::make_unique;
 using std::runtime_error;
 
 int main() {
+  /*
   unique_ptr<Image> img = make_unique<Image>("../tests/lenna.png");
   img->write_image("hasil.png");
   unique_ptr<Image>tmp = img->grayscale();
@@ -22,6 +23,19 @@ int main() {
   unique_ptr<Image> colorbar(new Image("../tests/colorbar.png"));
   auto gray_colorbar(colorbar->grayscale());
   gray_colorbar->write_image("gray_colorbar.png");
+  */
+
+  unique_ptr<Image> orig = make_unique<Image>("../tests/dog.jpg");
+  unique_ptr<Image> nored = orig->zerochannel(0);
+  nored->write_image("nored.jpg");
+  unique_ptr<Image> shift = orig->shift_color((float)0.4);
+  shift->write_image("Shifted.jpg");
+  unique_ptr<Image> clamp(shift->clamp_img());
+  clamp->write_image("clamp.jpg");
+  shift->internal_clamp();
+  shift->write_image("Internal clamping.jpg");
+
+
 
   return 0;
 }
@@ -63,6 +77,7 @@ ImageType Image::get_file_type(const char* filename) {
 Image::~Image() {
 
 }
+
 
 
 unique_ptr<unsigned char[]> Image::conv_to_stb() {
@@ -144,6 +159,16 @@ void Image::set_pixel(int x, int y, int c, float v) {
   m_img[x + y * m_width + c * m_width * m_height] = v;
 }
 
+unique_ptr<Image> Image::zerochannel(int c) {
+  unique_ptr<Image> tmp(this->copy());
+  for(int i=0; i<m_height; ++i) {
+    for(int j=0; j<m_width; ++j) {
+      tmp->set_pixel(j, i, c, 0);
+    }
+  }
+  return tmp;
+}
+
 
 unique_ptr<Image> Image::copy() {
   unique_ptr<Image> new_img(new Image(m_width, m_height, m_channels));
@@ -180,5 +205,55 @@ unique_ptr<Image> Image::grayscale() {
     }
   }
   return gray;
+}
+
+unique_ptr<Image> Image::shift_color(float v) {
+  unique_ptr<Image> tmp(new Image(m_width, m_height, m_channels));
+  for(int i=0; i<m_channels; ++i) {
+    for(int j=0; j<m_height; ++j) {
+      for(int k=0; k<m_width; ++k) {
+        tmp->set_pixel(k, j, i, get_pixel(k, j, i) + v);
+      }
+    }
+  }
+  return tmp;
+}
+
+float Image::clamp_pix(float v) {
+  if(v > 0.) {
+    if(v > 1.) {
+      return (float)1.0;
+    }
+    else {
+      return v;
+    }
+  }
+  else {
+    return (float)0.0;
+  }
+}
+
+void Image::internal_clamp() {
+  for(int i=0; i<m_channels; ++i) {
+    for(int j=0; j<m_height; ++j) {
+      for(int k=0; k<m_width; ++k) {
+        float pixval = clamp_pix(get_pixel(k, j, i));
+        set_pixel(k, j, i, pixval);
+      }
+    }
+  } 
+}
+
+unique_ptr<Image> Image::clamp_img() {
+  unique_ptr<Image> tmp(new Image(m_width, m_height, m_channels));
+  for(int i=0; i<m_channels; ++i) {
+    for(int j=0; j<m_height; ++j) {
+      for(int k=0; k<m_width; ++k) {
+        float pixval = clamp_pix(get_pixel(k, j, i));
+        tmp->set_pixel(k, j, i, pixval);
+      }
+    }
+  }
+  return tmp;
 }
 

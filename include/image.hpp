@@ -26,12 +26,17 @@ public:
   
   ImageType get_file_type(const char* filename);
   void make_image(int width, int height, int channels);
-  unique_ptr<unsigned char[]> conv_to_stb();
   void load_image(const char* path);
   void write_image(const char* filename);
   float get_pixel(int x, int y, int c);
   void set_pixel(int x, int y, int c, float v);
+  float clamp_pix(float v);
+  void internal_clamp();
+  unique_ptr<unsigned char[]> conv_to_stb();
   unique_ptr<Image> copy();
+  unique_ptr<Image> zerochannel(int c);
   unique_ptr<Image> grayscale();
+  unique_ptr<Image> shift_color(float v);
+  unique_ptr<Image> clamp_img();
   ~Image();
 };
