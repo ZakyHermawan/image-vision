@@ -25,7 +25,7 @@ public:
   Image(int width, int height, int channels);
   Image(const char* path);
   ~Image();
-  
+
   ImageType get_file_type(const char* filename);
   void make_image(int width, int height, int channels);
   void load_image(const char* path);

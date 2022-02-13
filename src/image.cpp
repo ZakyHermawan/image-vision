@@ -54,7 +54,7 @@ Image::Image(int width, int height, int channels) {
 */
 Image::Image(const char* path) {
   std::ifstream infile(path);
-  if(!infile.good()) {
+  if (!infile.good()) {
     throw runtime_error("File did not exist");
   }
   load_image(path);
@@ -69,21 +69,21 @@ Image::~Image() {
 */
 ImageType Image::get_file_type(const char* filename) {
   const char* ext = strrchr(filename, '.');
-  if(ext != nullptr) {
-    if(strcmp(ext, ".png") == 0) {
+  if (ext != nullptr) {
+    if (strcmp(ext, ".png") == 0) {
       return PNG;
     }
-    else if(strcmp(ext, ".jpg") == 0) {
+    else if (strcmp(ext, ".jpg") == 0) {
       return JPG;
     }
-    else if(strcmp(ext, ".bmp") == 0) {
+    else if (strcmp(ext, ".bmp") == 0) {
       return BMP;
     }
-    else if(strcmp(ext, ".tga") == 0) {
+    else if (strcmp(ext, ".tga") == 0) {
       return TGA;
     }
-    
-    
+
+
   }
   throw runtime_error("extension not supported");
 
@@ -131,18 +131,18 @@ void Image::load_image(const char* path) {
 void Image::write_image(const char* filename) {
   ImageType type = get_file_type(filename);
   unique_ptr<unsigned char[]> conv = conv_to_stb();
-  switch(type) {
-    case PNG:
-      stbi_write_png(filename, m_width, m_height, m_channels, conv.get(), m_width * m_channels);
-      break;
-    case BMP:
-      stbi_write_bmp(filename, m_width, m_height, m_channels, conv.get());
-      break;
-    case JPG:
-      stbi_write_jpg(filename, m_width, m_height, m_channels, conv.get(), 100);
-      break;
-    case TGA:
-      stbi_write_tga(filename, m_width, m_height, m_channels, conv.get());
+  switch (type) {
+  case PNG:
+    stbi_write_png(filename, m_width, m_height, m_channels, conv.get(), m_width * m_channels);
+    break;
+  case BMP:
+    stbi_write_bmp(filename, m_width, m_height, m_channels, conv.get());
+    break;
+  case JPG:
+    stbi_write_jpg(filename, m_width, m_height, m_channels, conv.get(), 100);
+    break;
+  case TGA:
+    stbi_write_tga(filename, m_width, m_height, m_channels, conv.get());
   }
 }
 
@@ -151,10 +151,10 @@ void Image::write_image(const char* filename) {
 * get the normalized pixel value
 */
 float Image::get_pixel(int x, int y, int c) {
-  if(x < 0 || y < 0) {
+  if (x < 0 || y < 0) {
     throw runtime_error("Image index cannot be negative");
   }
-  if(y < 0) {
+  if (y < 0) {
     throw runtime_error("Channel cannot be negative");
   }
   return m_img[x + y * m_width + c * m_width * m_height];
@@ -165,10 +165,10 @@ float Image::get_pixel(int x, int y, int c) {
 * wet the normalized pixel value at specific pixel and channel of an image
 */
 void Image::set_pixel(int x, int y, int c, float v) {
-  if(x < 0 || y < 0) {
+  if (x < 0 || y < 0) {
     throw runtime_error("Image index cannot be negative");
   }
-  if(y < 0) {
+  if (y < 0) {
     throw runtime_error("Channel cannot be negative");
   }
   m_img[x + y * m_width + c * m_width * m_height] = v;
@@ -178,8 +178,8 @@ void Image::set_pixel(int x, int y, int c, float v) {
 * return v that is not below 0 or more than v
 */
 float Image::clamp_pix(float v) {
-  if(v > 0.) {
-    if(v > 1.) {
+  if (v > 0.) {
+    if (v > 1.) {
       return (float)1.0;
     }
     else {
@@ -195,14 +195,14 @@ float Image::clamp_pix(float v) {
 * make sure every pixel in image is clamped
 */
 void Image::internal_clamp() {
-  for(int i=0; i<m_channels; ++i) {
-    for(int j=0; j<m_height; ++j) {
-      for(int k=0; k<m_width; ++k) {
+  for (int i = 0; i < m_channels; ++i) {
+    for (int j = 0; j < m_height; ++j) {
+      for (int k = 0; k < m_width; ++k) {
         float pixval = clamp_pix(get_pixel(k, j, i));
         set_pixel(k, j, i, pixval);
       }
     }
-  } 
+  }
 }
 
 /*
@@ -257,8 +257,8 @@ unique_ptr<Image> Image::copy() {
 */
 unique_ptr<Image> Image::zerochannel(int c) {
   unique_ptr<Image> tmp(copy());
-  for(int i=0; i<m_height; ++i) {
-    for(int j=0; j<m_width; ++j) {
+  for (int i = 0; i < m_height; ++i) {
+    for (int j = 0; j < m_width; ++j) {
       tmp->set_pixel(j, i, c, 0);
     }
   }
@@ -269,7 +269,7 @@ unique_ptr<Image> Image::zerochannel(int c) {
 * return an unique_ptr that point to a new greyscaled image
 */
 unique_ptr<Image> Image::grayscale() {
-  if(m_channels != 3) {
+  if (m_channels != 3) {
     throw runtime_error("You must have three channels");
   }
 
@@ -280,8 +280,8 @@ unique_ptr<Image> Image::grayscale() {
   float wblue = 0.114f;
 
   int ctr = 0;
-  for(int i=0; i<m_height; ++i) {
-    for(int j=0; j<m_width; ++j) {
+  for (int i = 0; i < m_height; ++i) {
+    for (int j = 0; j < m_width; ++j) {
       float red, green, blue, greyval;
       red = get_pixel(j, i, 0);
       green = get_pixel(j, i, 1);
@@ -299,9 +299,9 @@ unique_ptr<Image> Image::grayscale() {
 */
 unique_ptr<Image> Image::shift_color(float v) {
   unique_ptr<Image> tmp(new Image(m_width, m_height, m_channels));
-  for(int i=0; i<m_channels; ++i) {
-    for(int j=0; j<m_height; ++j) {
-      for(int k=0; k<m_width; ++k) {
+  for (int i = 0; i < m_channels; ++i) {
+    for (int j = 0; j < m_height; ++j) {
+      for (int k = 0; k < m_width; ++k) {
         tmp->set_pixel(k, j, i, get_pixel(k, j, i) + v);
       }
     }
@@ -314,9 +314,9 @@ unique_ptr<Image> Image::shift_color(float v) {
 */
 unique_ptr<Image> Image::clamp_img() {
   unique_ptr<Image> tmp(new Image(m_width, m_height, m_channels));
-  for(int i=0; i<m_channels; ++i) {
-    for(int j=0; j<m_height; ++j) {
-      for(int k=0; k<m_width; ++k) {
+  for (int i = 0; i < m_channels; ++i) {
+    for (int j = 0; j < m_height; ++j) {
+      for (int k = 0; k < m_width; ++k) {
         float pixval = clamp_pix(get_pixel(k, j, i));
         tmp->set_pixel(k, j, i, pixval);
       }
