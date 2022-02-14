@@ -36,6 +36,8 @@ public:
   void internal_clamp();
   float max_three(float r, float g, float b);
   float min_three(float r, float g, float b);
+  int get_width();
+  int get_height();
   unique_ptr<unsigned char[]> conv_to_stb();
   unique_ptr<Image> copy();
   unique_ptr<Image> zerochannel(int c);
@@ -44,4 +46,5 @@ public:
   unique_ptr<Image> clamp_img();
   unique_ptr<Image> rgb_to_hsv();
   unique_ptr<Image> hsv_to_rgb();
+  unique_ptr<Image> nn_resize(int width, int height);
 };

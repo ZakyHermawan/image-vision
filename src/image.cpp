@@ -38,6 +38,10 @@ int main() {
   unique_ptr<Image> to_hsv = rgb->rgb_to_hsv();
   unique_ptr<Image> to_rgb = to_hsv->hsv_to_rgb();
   to_rgb->write_image("hsv_rgb_conversion.jpg");
+  unique_ptr<Image> before_nn = make_unique<Image>("tests/dog.jpg");
+  unique_ptr<Image> after_nn = before_nn->nn_resize(before_nn->get_width() * 2, before_nn->get_height() * 2);
+  after_nn->write_image("after_nn.jpg");
+
 
   return 0;
 }
@@ -217,6 +221,20 @@ float Image::max_three(float a, float b, float c) {
 */
 float Image::min_three(float a, float b, float c) {
   return (a < b) ? ((a < c) ? a : c) : ((b < c) ? b : c);
+}
+
+/*
+* return image width
+*/
+int Image::get_width() {
+  return m_width;
+}
+
+/*
+* return image height
+*/
+int Image::get_height() {
+  return m_height;
 }
 
 /*
@@ -415,6 +433,25 @@ unique_ptr<Image> Image::hsv_to_rgb() {
       tmp->set_pixel(j, i, 0, r);
       tmp->set_pixel(j, i, 1, g);
       tmp->set_pixel(j, i, 2, b);
+    }
+  }
+  return tmp;
+}
+
+/*
+* create a new resized image with same number of channel using nearest neighbor
+*/
+unique_ptr<Image> Image::nn_resize(int width, int height) {
+  unique_ptr <Image> tmp(new Image(width, height, m_channels));
+  int w_factor = (int)((m_width << 16) / width) + 1;
+  int h_factor = (int)((m_height << 16) / height) + 1;
+  for (int i = 0; i < height; ++i) {
+    for (int j = 0; j < width; ++j) {
+      int src_x = ((j * w_factor) >> 16);
+      int src_y = ((i * h_factor) >> 16);
+      tmp->set_pixel(j, i, 0, get_pixel(src_x, src_y, 0));
+      tmp->set_pixel(j, i, 1, get_pixel(src_x, src_y, 1));
+      tmp->set_pixel(j, i, 2, get_pixel(src_x, src_y, 2));
     }
   }
   return tmp;
