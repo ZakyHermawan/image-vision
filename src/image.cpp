@@ -4,40 +4,25 @@
 #include <memory>
 #include <algorithm>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
 using std::unique_ptr;
 using std::make_unique;
 using std::runtime_error;
 
 int main() {
-  /*
-  unique_ptr<Image> img = make_unique<Image>("tests/lenna.png");
-  img->write_image("hasil.png");
-  unique_ptr<Image>tmp = img->grayscale();
-  tmp->write_image("gray.png");
-  unique_ptr<Image> tes = make_unique<Image>("tests/example.jpg");
-  tes->write_image("yow.jpg");
-  unique_ptr<Image> grayscaled = tes->grayscale();
-  grayscaled->write_image("graaaay.jpg");
-  unique_ptr<Image> kopi(grayscaled->copy());
-  kopi->write_image("kopi.png");
-  unique_ptr<Image> colorbar(new Image("tests/colorbar.png"));
-  auto gray_colorbar(colorbar->grayscale());
-  gray_colorbar->write_image("gray_colorbar.png");
-  unique_ptr<Image> orig = make_unique<Image>("tests/dog.jpg");
-  unique_ptr<Image> nored = orig->zerochannel(0);
-  nored->write_image("nored.jpg");
-  unique_ptr<Image> shift = orig->shift_color((float)0.4);
-  shift->write_image("Shifted.jpg");
-  unique_ptr<Image> clamp(shift->clamp_img());
-  clamp->write_image("clamp.jpg");
-  shift->internal_clamp();
-  shift->write_image("Internal clamping.jpg");
-  */
 
-  unique_ptr<Image> rgb = make_unique<Image>("tests/dog.jpg");
-  unique_ptr<Image> to_hsv = rgb->rgb_to_hsv();
-  unique_ptr<Image> to_rgb = to_hsv->hsv_to_rgb();
-  to_rgb->write_image("hsv_rgb_conversion.jpg");
+  /*
+    Image::test_set_pixel();
+    Image::test_copy();
+    Image::test_grayscale();
+    Image::test_shift();
+    Image::test_hsv();
+    Image::test_scale();
+  */
 
   return 0;
 }
@@ -162,7 +147,7 @@ float Image::get_pixel(int x, int y, int c) {
 
 /*
 * x, y, and c (channel) is spatial (image) coordinate
-* wet the normalized pixel value at specific pixel and channel of an image
+* get the normalized pixel value at specific pixel and channel of an image
 */
 void Image::set_pixel(int x, int y, int c, float v) {
   if (x < 0 || y < 0) {
@@ -295,17 +280,18 @@ unique_ptr<Image> Image::grayscale() {
 
 
 /*
-* return an unique_ptr that point to a new shifted color image
+* Add all v to all pixel value on channel c
 */
-unique_ptr<Image> Image::shift_color(float v) {
-  unique_ptr<Image> tmp(new Image(m_width, m_height, m_channels));
-  for (int i = 0; i < m_channels; ++i) {
-    for (int j = 0; j < m_height; ++j) {
-      for (int k = 0; k < m_width; ++k) {
-        tmp->set_pixel(k, j, i, get_pixel(k, j, i) + v);
+#include <iostream>
+unique_ptr<Image> Image::shift_color(int c, float v) {
+  unique_ptr<Image> tmp(copy());
+    for (int i = 0; i < m_height; ++i) {
+      for (int j = 0; j < m_width; ++j) {
+        // std::cout << (get_pixel(j, i, 1) + v) << " " << (get_pixel(j, i, 1)) << std::endl;
+        tmp->set_pixel(j, i, c, get_pixel(j, i, c)+v);
       }
+      // std::cout << std::endl;
     }
-  }
   return tmp;
 }
 
@@ -415,6 +401,19 @@ unique_ptr<Image> Image::hsv_to_rgb() {
       tmp->set_pixel(j, i, 0, r);
       tmp->set_pixel(j, i, 1, g);
       tmp->set_pixel(j, i, 2, b);
+    }
+  }
+  return tmp;
+}
+
+/**
+ * multiple each pixel value of the image by v
+*/
+unique_ptr<Image> Image::scale_image(int c, float v) {
+  unique_ptr<Image> tmp(copy());
+  for(int i=0; i<m_height; ++i) {
+    for(int j=0; j<m_width; ++j) {
+      tmp->set_pixel(j, i, c, v*get_pixel(j, i, c));
     }
   }
   return tmp;

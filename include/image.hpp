@@ -1,8 +1,4 @@
 #pragma once
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
 #include <memory>
 
 using std::unique_ptr;
@@ -40,8 +36,17 @@ public:
   unique_ptr<Image> copy();
   unique_ptr<Image> zerochannel(int c);
   unique_ptr<Image> grayscale();
-  unique_ptr<Image> shift_color(float v);
+  unique_ptr<Image> shift_color(int c, float v);
   unique_ptr<Image> clamp_img();
   unique_ptr<Image> rgb_to_hsv();
   unique_ptr<Image> hsv_to_rgb();
+  unique_ptr<Image> scale_image(int c, float v);
+
+  // test function
+  static void test_set_pixel();
+  static void test_copy();
+  static void test_grayscale();
+  static void test_shift();
+  static void test_hsv();
+  static void test_scale();
 };
