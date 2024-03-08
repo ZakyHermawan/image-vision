@@ -32,6 +32,8 @@ public:
   void internal_clamp();
   float max_three(float r, float g, float b);
   float min_three(float r, float g, float b);
+  float nn_interpolate(float x, float y, int c);
+
   unique_ptr<unsigned char[]> conv_to_stb();
   unique_ptr<Image> copy();
   unique_ptr<Image> zerochannel(int c);
@@ -41,6 +43,7 @@ public:
   unique_ptr<Image> rgb_to_hsv();
   unique_ptr<Image> hsv_to_rgb();
   unique_ptr<Image> scale_image(int c, float v);
+  unique_ptr<Image> nn_resize(int w, int h);
 
   // test function
   static void test_set_pixel();
@@ -49,4 +52,5 @@ public:
   static void test_shift();
   static void test_hsv();
   static void test_scale();
+  static void test_nn_resize();
 };

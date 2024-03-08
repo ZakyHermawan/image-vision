@@ -1,7 +1,6 @@
 #include "image.hpp"
 #include <fstream>
 #include <exception>
-#include <memory>
 #include <algorithm>
 
 #define STB_IMAGE_IMPLEMENTATION

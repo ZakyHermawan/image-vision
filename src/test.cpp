@@ -27,15 +27,6 @@ void Image::test_grayscale() {
   gray->write_image("greyscaled_image.jpg");
 }
 
-/*
-im = load_image("data/dog.jpg")
-rgb_to_hsv(im)
-scale_image(im, 1, 2)
-clamp_image(im)
-hsv_to_rgb(im)
-save_image(im, "dog_scale_saturated")
-*/
-
 void Image::test_shift() {
   auto img = make_unique<Image>("tests/dog.jpg");
   auto shift1 = img->shift_color(0, .4);
@@ -63,4 +54,8 @@ void Image::test_scale() {
   to_rgb->write_image("dog_scale_saturated.jpg");
 }
 
-
+void Image::test_nn_resize() {
+  auto img = make_unique<Image>("tests/dog.jpg");
+  auto resized = img->nn_resize(img->m_width*4, img->m_height*4);
+  resized->write_image("resized.jpg");
+}
