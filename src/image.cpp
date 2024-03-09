@@ -10,8 +10,9 @@ int main() {
     Image::test_shift();
     Image::test_hsv();
     Image::test_scale();
+    Image::test_nn_resize();
+    Image::test_bilinear_resize();
   */
- Image::test_nn_resize();
- 
+
   return 0;
 }

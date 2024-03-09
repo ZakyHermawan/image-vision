@@ -55,7 +55,22 @@ void Image::test_scale() {
 }
 
 void Image::test_nn_resize() {
+  auto small_img = make_unique<Image>("tests/dogsmall.jpg");
+  auto resized = small_img->nn_resize(small_img->m_width*4, small_img->m_height*4);
+  resized->write_image("nn_resize_from_dogsmall.jpg");
+
   auto img = make_unique<Image>("tests/dog.jpg");
-  auto resized = img->nn_resize(img->m_width*4, img->m_height*4);
-  resized->write_image("resized.jpg");
+  resized = img->nn_resize(img->m_width*4, img->m_height*4);
+  resized->write_image("nn_resize_from_dog.jpg");
+
+}
+
+void Image::test_bilinear_resize() {
+  auto small_img = make_unique<Image>("tests/dogsmall.jpg");
+  auto resized = small_img->bilinear_resize(small_img->m_width*4, small_img->m_height*4);
+  resized->write_image("bilinear_resize_from_dogsmall.jpg");
+
+  auto img = make_unique<Image>("tests/dog.jpg");
+  resized = img->bilinear_resize(img->m_width*4, img->m_height*4);
+  resized->write_image("bilinear_resize_from_dog.jpg");
 }

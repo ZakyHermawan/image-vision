@@ -118,15 +118,18 @@ void Image::write_image(const char* filename) {
 
 /*
 * x, y, and c (channel) is spatial (image) coordinate
+* if x or y will always on valid value
 * get the normalized pixel value
 */
 float Image::get_pixel(int x, int y, int c) {
-  if (x < 0 || y < 0) {
-    throw runtime_error("Image index cannot be negative");
-  }
-  if (y < 0) {
-    throw runtime_error("Channel cannot be negative");
-  }
+
+	int columns= m_width;
+	int rows = m_height;
+	int channels = m_channels;
+	x = ((x < columns) ? ( (x <= 0) ? 0 : x) : columns-1);
+	y = ((y < rows) ? ( (y <= 0) ? 0 : y) : rows-1);
+	c = ((c < channels) ? ( (c <= 0) ? 0 : c) : channels-1);
+
   return m_img[x + y * m_width + c * m_width * m_height];
 }
 
