@@ -46,6 +46,9 @@ public:
   unique_ptr<Image> scale_image(int c, float v);
   unique_ptr<Image> nn_resize(int w, int h);
   unique_ptr<Image> bilinear_resize(int w, int h);
+  unique_ptr<Image> l1_normalize();
+  unique_ptr<Image> make_box_filter(int w);
+  unique_ptr<Image> convolvte_image(unique_ptr<Image> filter, int preseve);
 
   // test function
   static void test_set_pixel();
