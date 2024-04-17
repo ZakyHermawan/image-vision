@@ -65,13 +65,6 @@ unique_ptr<Image> Image::convolve_image(unique_ptr<Image> filter, int preserve) 
   unique_ptr<Image> target_img(new Image(m_width, m_height, target_channels));
   std::cout << m_width << " " << m_height << std::endl;
   std::cout << target_img->m_width << " " << target_img->m_height << std::endl;
-  for(int i=0; i<target_img->m_channels; ++i) {
-    for(int j=0; j<target_img->m_height; ++j) {
-      for(int k=0; k<target_img->m_width; ++k) {
-        target_img->set_pixel(k, j, i, 0);
-      }
-    }
-  }
 
 	center_x 	= filter->m_width/2;
 	center_y 	= filter->m_height/2;
