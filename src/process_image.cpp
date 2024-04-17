@@ -270,15 +270,12 @@ unique_ptr<Image> Image::grayscale() {
 /*
 * Add all v to all pixel value on channel c
 */
-#include <iostream>
 unique_ptr<Image> Image::shift_color(int c, float v) {
   unique_ptr<Image> tmp(copy());
     for (int i = 0; i < m_height; ++i) {
       for (int j = 0; j < m_width; ++j) {
-        // std::cout << (get_pixel(j, i, 1) + v) << " " << (get_pixel(j, i, 1)) << std::endl;
         tmp->set_pixel(j, i, c, get_pixel(j, i, c)+v);
       }
-      // std::cout << std::endl;
     }
   return tmp;
 }
