@@ -14,6 +14,7 @@ int main() {
     Image::test_bilinear_resize();
     Image::test_convolve();
   */ 
+  Image::test_filters();
 
   return 0;
 }

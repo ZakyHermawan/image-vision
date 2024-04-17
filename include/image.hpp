@@ -18,10 +18,12 @@ private:
 
 public:
   Image() = default;
+  Image(const Image&) = delete;
   Image(int width, int height, int channels);
   Image(const char* path);
   ~Image();
 
+  Image& operator=(const Image&) = delete;
   ImageType get_file_type(const char* filename);
   void make_image(int width, int height, int channels);
   void load_image(const char* path);
@@ -48,6 +50,10 @@ public:
   unique_ptr<Image> bilinear_resize(int w, int h);
   unique_ptr<Image> l1_normalize();
   unique_ptr<Image> make_box_filter(int w);
+  unique_ptr<Image> make_high_pass_filter();
+  unique_ptr<Image> make_sharpen_filter();
+  unique_ptr<Image> make_emboss_filter();
+  
   unique_ptr<Image> normalize_channel(int c);
   unique_ptr<Image> convolve_image(unique_ptr<Image> filter, int preserve);
 
@@ -61,4 +67,5 @@ public:
   static void test_nn_resize();
   static void test_bilinear_resize();
   static void test_convolve();
+  static void test_filters();
 };

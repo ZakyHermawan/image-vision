@@ -63,8 +63,6 @@ unique_ptr<Image> Image::convolve_image(unique_ptr<Image> filter, int preserve) 
 
 	target_channels = (preserve) ? m_channels : 1;
   unique_ptr<Image> target_img(new Image(m_width, m_height, target_channels));
-  std::cout << m_width << " " << m_height << std::endl;
-  std::cout << target_img->m_width << " " << target_img->m_height << std::endl;
 
 	center_x 	= filter->m_width/2;
 	center_y 	= filter->m_height/2;
@@ -104,3 +102,45 @@ unique_ptr<Image> Image::convolve_image(unique_ptr<Image> filter, int preserve) 
 
 	return target_img;
 }
+
+unique_ptr<Image> Image::make_high_pass_filter(){
+  unique_ptr<Image> hpf_kernel(new Image(3, 3, 1));
+  hpf_kernel->set_pixel(0, 0, 0, 0);
+  hpf_kernel->set_pixel(1, 0, 0, -1);
+  hpf_kernel->set_pixel(2, 0, 0, 0);
+  hpf_kernel->set_pixel(0, 1, 0, -1);
+  hpf_kernel->set_pixel(1, 1, 0, 4);
+  hpf_kernel->set_pixel(2, 1, 0, -1);
+  hpf_kernel->set_pixel(0, 2, 0, 0);
+  hpf_kernel->set_pixel(1, 2, 0, -1);
+  hpf_kernel->set_pixel(2, 2, 0, 0);
+  return hpf_kernel;
+}
+unique_ptr<Image> Image::make_sharpen_filter(){
+  unique_ptr<Image> sharpen_kernel(new Image(3, 3, 1));
+  sharpen_kernel->set_pixel(0, 0, 0, 0);
+  sharpen_kernel->set_pixel(1, 0, 0, -1);
+  sharpen_kernel->set_pixel(2, 0, 0, 0);
+  sharpen_kernel->set_pixel(0, 1, 0, -1);
+  sharpen_kernel->set_pixel(1, 1, 0, 5);
+  sharpen_kernel->set_pixel(2, 1, 0, -1);
+  sharpen_kernel->set_pixel(0, 2, 0, 0);
+  sharpen_kernel->set_pixel(1, 2, 0, -1);
+  sharpen_kernel->set_pixel(2, 2, 0, 0);
+  return sharpen_kernel;
+
+}
+unique_ptr<Image> Image::make_emboss_filter(){
+  unique_ptr<Image> emboss_kernel(new Image(3, 3, 1));
+  emboss_kernel->set_pixel(0, 0, 0, -2);
+  emboss_kernel->set_pixel(1, 0, 0, -1);
+  emboss_kernel->set_pixel(2, 0, 0, 0);
+  emboss_kernel->set_pixel(0, 1, 0, -1);
+  emboss_kernel->set_pixel(1, 1, 0, 1);
+  emboss_kernel->set_pixel(2, 1, 0, 1);
+  emboss_kernel->set_pixel(0, 2, 0, 0);
+  emboss_kernel->set_pixel(1, 2, 0, 1);
+  emboss_kernel->set_pixel(2, 2, 0, 2);
+  return emboss_kernel;
+}
+  

@@ -80,3 +80,13 @@ void Image::test_convolve() {
   auto blur = img->convolve_image(img->make_box_filter(7), 1);
   blur->write_image("blur.jpg");
 }
+
+void Image::test_filters() {
+  auto img = make_unique<Image>("tests/dog.jpg");
+  auto ihpf = img->convolve_image(img->make_high_pass_filter(), 1);
+  auto isharpen = img->convolve_image(img->make_sharpen_filter(), 1);
+  auto iemboss = img->convolve_image(img->make_emboss_filter(), 1);
+  ihpf->write_image("hpf.jpg");
+  isharpen->write_image("isharpen.jpg");
+  iemboss->write_image("iemboss.jpg");
+}
