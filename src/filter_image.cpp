@@ -44,11 +44,9 @@ unique_ptr<Image> Image::normalize_channel(int c) {
 }
 
 unique_ptr<Image> Image::convolve_image(unique_ptr<Image> filter, int preserve) {
-	int filter_x;
 	int correl_x;
 	int center_x;
 
-	int filter_y;
 	int correl_y;
 	int center_y;
 
@@ -86,8 +84,8 @@ unique_ptr<Image> Image::convolve_image(unique_ptr<Image> filter, int preserve) 
 				if (preserve) {
           correlated_pixel = 0;
         }
-				for (filter_y = 0; filter_y < filter->m_height; filter_y++) {	
-					for (filter_x = 0; filter_x < filter->m_width; filter_x++) {
+				for (int filter_y = 0; filter_y < filter->m_height; filter_y++) {	
+					for (int filter_x = 0; filter_x < filter->m_width; filter_x++) {
 						correl_x = source_x + filter_x - center_x;
 						correl_y = source_y + filter_y - center_y;
 
