@@ -74,3 +74,9 @@ void Image::test_bilinear_resize() {
   resized = img->bilinear_resize(img->m_width*4, img->m_height*4);
   resized->write_image("bilinear_resize_from_dog.jpg");
 }
+
+void Image::test_convolve() {
+  auto img = make_unique<Image>("tests/dog.jpg");
+  auto blur = img->convolve_image(img->make_box_filter(7), 1);
+  blur->write_image("blur.jpg");
+}

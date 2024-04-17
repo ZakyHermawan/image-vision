@@ -48,7 +48,8 @@ public:
   unique_ptr<Image> bilinear_resize(int w, int h);
   unique_ptr<Image> l1_normalize();
   unique_ptr<Image> make_box_filter(int w);
-  unique_ptr<Image> convolvte_image(unique_ptr<Image> filter, int preseve);
+  unique_ptr<Image> normalize_channel(int c);
+  unique_ptr<Image> convolve_image(unique_ptr<Image> filter, int preserve);
 
   // test function
   static void test_set_pixel();
@@ -59,4 +60,5 @@ public:
   static void test_scale();
   static void test_nn_resize();
   static void test_bilinear_resize();
+  static void test_convolve();
 };

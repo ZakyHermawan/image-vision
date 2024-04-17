@@ -12,6 +12,7 @@ int main() {
     Image::test_scale();
     Image::test_nn_resize();
     Image::test_bilinear_resize();
+    Image::test_convolve();
   */ 
 
   return 0;
