@@ -86,7 +86,9 @@ void Image::test_filters() {
   auto ihpf = img->convolve_image(img->make_high_pass_filter(), 1);
   auto isharpen = img->convolve_image(img->make_sharpen_filter(), 1);
   auto iemboss = img->convolve_image(img->make_emboss_filter(), 1);
+  auto igauss = img->convolve_image(img->make_gaussian_filter(2), 1);
   ihpf->write_image("hpf.jpg");
   isharpen->write_image("isharpen.jpg");
   iemboss->write_image("iemboss.jpg");
+  igauss->write_image("gaussian.jpg");
 }

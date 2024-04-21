@@ -36,6 +36,7 @@ public:
   float min_three(float r, float g, float b);
   float nn_interpolate(float x, float y, int c);
   float bilinear_interpolate(float x, float y, int c);
+  float gaussian_function(uint32_t x, uint32_t y, uint32_t sigma);
 
   unique_ptr<unsigned char[]> conv_to_stb();
   unique_ptr<Image> copy();
@@ -53,7 +54,8 @@ public:
   unique_ptr<Image> make_high_pass_filter();
   unique_ptr<Image> make_sharpen_filter();
   unique_ptr<Image> make_emboss_filter();
-  
+  unique_ptr<Image> make_gaussian_filter(uint32_t sigma);
+
   unique_ptr<Image> normalize_channel(int c);
   unique_ptr<Image> convolve_image(unique_ptr<Image> filter, int preserve);
 

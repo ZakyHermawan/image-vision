@@ -1,5 +1,7 @@
 #include "image.hpp"
 #include <iostream>
+#include <cmath>
+
 unique_ptr<Image> Image::l1_normalize() {
   auto normalized_img(copy());
   int size = m_height*m_width;
@@ -116,6 +118,7 @@ unique_ptr<Image> Image::make_high_pass_filter(){
   hpf_kernel->set_pixel(2, 2, 0, 0);
   return hpf_kernel;
 }
+
 unique_ptr<Image> Image::make_sharpen_filter(){
   unique_ptr<Image> sharpen_kernel(new Image(3, 3, 1));
   sharpen_kernel->set_pixel(0, 0, 0, 0);
@@ -130,6 +133,7 @@ unique_ptr<Image> Image::make_sharpen_filter(){
   return sharpen_kernel;
 
 }
+
 unique_ptr<Image> Image::make_emboss_filter(){
   unique_ptr<Image> emboss_kernel(new Image(3, 3, 1));
   emboss_kernel->set_pixel(0, 0, 0, -2);
@@ -143,4 +147,23 @@ unique_ptr<Image> Image::make_emboss_filter(){
   emboss_kernel->set_pixel(2, 2, 0, 2);
   return emboss_kernel;
 }
-  
+
+unique_ptr<Image> Image::make_gaussian_filter(uint32_t sigma) {
+  size_t ksize = 6 * sigma;
+  ksize = (ksize % 2 == 0) ? ksize+1 : ksize;
+  unique_ptr<Image> gaussian_kernel(new Image(ksize, ksize, 1));
+
+  for(int i=0; i<ksize; ++i) {
+    for(int j=0; j<ksize; ++j) {
+      gaussian_kernel->set_pixel(j, i, 0, gaussian_function(j, i, sigma));
+    }
+  }
+
+  gaussian_kernel->l1_normalize();
+  return gaussian_kernel;
+}
+
+float Image::gaussian_function(uint32_t x, uint32_t y, uint32_t sigma) {
+  float gaussian = (1/((M_PI * 2)*pow(sigma, 2))) * (exp(-(pow(x, 2) + pow(y, 2))/(2*pow(sigma, 2))));
+  return gaussian;
+}
